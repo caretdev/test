@@ -1,5 +1,3 @@
-name: CI
-
 on: 
   release:
     types:
@@ -20,14 +18,11 @@ jobs:
           set -x
           VERSION=$(jq -r '.version' package.json | cut -d- -f1)
           [ $GITHUB_EVENT_NAME == 'release' ] && VERSION=${{ github.event.release.tag_name }} && VERSION=${VERSION/v/}
-          NAME=$(jq -r '.name' package.json)-$VERSION
-          echo $VERSION > ./dist/.version
-          echo $NAME > ./dist/.name
+          echo $VERSION > .version
       - name: update release
         run: |
-          VERSION=`cat ./dist/.version`
+          VERSION=`cat .version`
           NEXT_VERSION=`echo ${VERSION} | awk -F. '/[0-9]+\./{$NF++;print}' OFS=.`
-          echo ::set-output name=name::`cat ./dist/.name`
           tmp=$(mktemp)
           git config --global user.name 'ProjectBot'
           git config --global user.email 'bot@users.noreply.github.com'
