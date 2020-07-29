@@ -8,7 +8,7 @@ jobs:
     steps:  
       - uses: actions/checkout@v2
         with:
-          ref: master
+          ref: main
           token: ${{ secrets.TOKEN_DAIMOR }}
       - name: Dump GitHub context
         env:
