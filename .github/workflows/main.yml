@@ -7,10 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:  
       - uses: actions/checkout@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_DAIMOR }}
         with:
           ref: master
+          token: ${{ secrets.TOKEN_DAIMOR }}
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
