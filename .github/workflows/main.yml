@@ -29,3 +29,4 @@ jobs:
           jq --arg version "${NEXT_VERSION}-SNAPSHOT" '.version = $version' package.json > "$tmp" && mv "$tmp" package.json
           git add package.json
           git commit -m 'auto bump version with release'
+          git push
