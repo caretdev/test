@@ -1,4 +1,4 @@
-# version: 0.1.42
+# version: 0.1.43
 on: 
   push:
     branches:
@@ -20,20 +20,22 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const runs = await github.actions.listWorkflowRunsForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              status: "in_progress",
-              event: "push",
-              branch: "main",
-            });
-            for (const run of runs) {
-              await github.actions.cancelWorkflowRun({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                run_id: run.id
-              })
-            }
+            console.log(github);
+            console.log(github.actions);
+            # const runs = await github.actions.listWorkflowRunsForRepo({
+            #   owner: context.repo.owner,
+            #   repo: context.repo.repo,
+            #   status: "in_progress",
+            #   event: "push",
+            #   branch: "main",
+            # });
+            # for (const run of runs) {
+            #   await github.actions.cancelWorkflowRun({
+            #     owner: context.repo.owner,
+            #     repo: context.repo.repo,
+            #     run_id: run.id
+            #   })
+            # }
       - uses: actions/javascript-action@v1
         with:
           milliseconds: 60000
