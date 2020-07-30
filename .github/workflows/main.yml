@@ -1,4 +1,4 @@
-# version: 0.1.48
+# version: 0.1.49
 on: 
   push:
     branches:
@@ -20,7 +20,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const runs = await github.actions.listWorkflowRuns({
+            const opts = github.actions.listWorkflowRuns.endpoint.merge({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 276983,
@@ -28,6 +28,7 @@ jobs:
               event: "push",
               branch: "main",
             });
+            const runs = await github.paginate(opts);
             console.log(runs);
       - uses: actions/javascript-action@v1
         with:
