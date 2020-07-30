@@ -1,4 +1,4 @@
-# version: 0.1.45
+# version: 0.1.46
 on: 
   push:
     branches:
@@ -30,6 +30,8 @@ jobs:
               event: "push",
               branch: "main",
             });
+
+            console.log(runs);
       - uses: actions/javascript-action@v1
         with:
           milliseconds: 60000
