@@ -1,4 +1,4 @@
-# version: 0.1.49
+# version: 0.1.50
 on: 
   push:
     branches:
@@ -20,6 +20,9 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            console.log(context.runId);
+            console.log(context.runNumber);
+            console.log(context);
             const opts = github.actions.listWorkflowRuns.endpoint.merge({
               owner: context.repo.owner,
               repo: context.repo.repo,
