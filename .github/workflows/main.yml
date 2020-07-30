@@ -1,4 +1,4 @@
-# version: 0.1.43
+# version: 0.1.44
 on: 
   push:
     branches:
@@ -22,6 +22,10 @@ jobs:
           script: |
             console.log(github);
             console.log(github.actions);
+      - uses: actions/javascript-action@v1
+        with:
+          milliseconds: 60000
+
             # const runs = await github.actions.listWorkflowRunsForRepo({
             #   owner: context.repo.owner,
             #   repo: context.repo.repo,
@@ -36,6 +40,3 @@ jobs:
             #     run_id: run.id
             #   })
             # }
-      - uses: actions/javascript-action@v1
-        with:
-          milliseconds: 60000
