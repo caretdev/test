@@ -1,7 +1,8 @@
+# version: 0.1.42
 on: 
-  release:
-    types:
-      - created
+  push:
+    branches:
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,22 +15,25 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - name: Set an output
-        id: set-version
-        if: runner.os == 'Linux'
-        run: |
-          set -x
-          VERSION=$(jq -r '.version' package.json | cut -d- -f1)
-          [ $GITHUB_EVENT_NAME == 'release' ] && VERSION=${{ github.event.release.tag_name }} && VERSION=${VERSION/v/}
-          echo $VERSION > .version
-      - name: update release
-        run: |
-          VERSION=`cat .version`
-          NEXT_VERSION=`echo ${VERSION} | awk -F. '/[0-9]+\./{$NF++;print}' OFS=.`
-          tmp=$(mktemp)
-          git config --global user.name 'ProjectBot'
-          git config --global user.email 'bot@users.noreply.github.com'
-          jq --arg version "${NEXT_VERSION}-SNAPSHOT" '.version = $version' package.json > "$tmp" && mv "$tmp" package.json
-          git add package.json
-          git commit -m 'auto bump version with release'
-          git push
+      - name: Cancel running workflows
+        uses: actions/github-script@v2
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const runs = await github.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              status: "in_progress",
+              event: "push",
+              branch: "main",
+            });
+            for (const run of runs) {
+              await github.actions.cancelWorkflowRun({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: run.id
+              })
+            }
+      - uses: actions/javascript-action@v1
+        with:
+          milliseconds: 60000
