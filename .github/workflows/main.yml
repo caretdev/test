@@ -1,9 +1,13 @@
-# version: 0.1.50
+# version: 0.1.51
 on: 
   push:
     branches:
       - main
 jobs:
+  cancel-redundant:
+    runs-on: ubuntu-latest
+    steps:  
+      - uses: technote-space/auto-cancel-redundant-job@v1
   build:
     runs-on: ubuntu-latest
     steps:  
@@ -15,32 +19,6 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - name: Cancel running workflows
-        uses: actions/github-script@v2
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            console.log(context.runId);
-            console.log(context.runNumber);
-            console.log(context);
-            const opts = github.actions.listWorkflowRuns.endpoint.merge({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 276983,
-              status: "in_progress",
-              event: "push",
-              branch: "main",
-            });
-            const runs = await github.paginate(opts);
-            console.log(runs);
       - uses: actions/javascript-action@v1
         with:
           milliseconds: 60000
-
-            # for (const run of runs) {
-            #   await github.actions.cancelWorkflowRun({
-            #     owner: context.repo.owner,
-            #     repo: context.repo.repo,
-            #     run_id: run.id
-            #   })
-            # }
