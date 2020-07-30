@@ -1,4 +1,4 @@
-# version: 0.1.47
+# version: 0.1.48
 on: 
   push:
     branches:
@@ -20,8 +20,6 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            console.log(context);
-            console.log(core);
             const runs = await github.actions.listWorkflowRuns({
               owner: context.repo.owner,
               repo: context.repo.repo,
